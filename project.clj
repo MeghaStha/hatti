@@ -20,9 +20,8 @@
                  [cljsjs/jquery "1.9.1-0"]
                  [prabhasp/slickgrid-cljs "0.0.1-SNAPSHOT"]
                  [prabhasp/osmtogeojson-cljs "2.2.5-SNAPSHOT"]
-                 ;; TODO: make into cljs packages
-                 [org.webjars/SlickGrid "2.1"]
                  ;; CLIENT REQUIREMENTS
+                 [prismatic/dommy "0.1.2"]
                  [cljs-http "0.1.17"]]
   :plugins [[lein-cljsbuild "1.0.5"]
             [com.keminglabs/cljx "0.6.0" :exclusions [org.clojure/clojure]]]
@@ -39,32 +38,17 @@
                    :output-path "target/generated/src/cljs"
                    :rules :cljs}]}
   :cljsbuild {
-    :builds [{:id "stolen"
+    :builds [{:id "test"
               :source-paths ["src/cljs"
-                             "target/generated/src/cljs"
-                             "examples/stolen/src" ]
-              :compiler {
-                  :output-to "examples/stolen/main.js"
-                  :output-dir "examples/stolen/out"
-                  :externs ["includes/externs/leaflet-externs.js"
-                            "includes/externs/jquery-externs.js"
-                            "includes/externs/slickgrid-externs.js"]
-                  :cache-analysis true
-                  :optimizations :whitespace
-                  :source-map "examples/stolen/main.js.map"}}
-             {:id "osm"
-              :source-paths ["src/cljs"
-                             "target/generated/src/cljs"
-                             "examples/osm/src" ]
-              :compiler {
-                  :output-to "examples/osm/main.js"
-                  :output-dir "examples/osm/out"
-                  :externs ["externs/leaflet-externs.js"
-                            "externs/jquery-externs.js"
-                            "externs/slickgrid-externs.js"]
-                  :cache-analysis true
-                  :optimizations :whitespace
-                  :source-map "examples/osm/main.js.map"}}
+                             "test/cljs"
+                             "target/generated/src/cljs"]
+              :notify-command ["phantomjs"
+                               "phantom/unit-test.js"
+                               "phantom/unit-test.html"
+                               "target/main-test.js"]
+              :compiler {:output-to "target/main-test.js"
+                         :optimizations :whitespace
+                         :pretty-print true}}
              {:id "hatti"
               :source-paths ["src/cljs"
                              "target/generated/src/cljs"]
@@ -73,4 +57,9 @@
                 :output-dir "out"
                 :optimizations :none
                 :cache-analysis true
-                :source-map true}}]})
+                :source-map true}}]
+    :test-commands {"unit-test"
+                    ["phantomjs"
+                     "phantom/unit-test.js"
+                     "phantom/unit-test.html"
+                     "target/main-test.js"]}})
